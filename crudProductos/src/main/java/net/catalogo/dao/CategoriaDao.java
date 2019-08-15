@@ -26,7 +26,7 @@ public class CategoriaDao {
 			// TODO: handle exception
 		}
 	}
-	
+	/*metodo Consultar Todo*/
 	public List<Categoria> consultarCategoria(){
 		try(Session sesion = HibernateUtil.getSessionFactory().openSession()){
 			return sesion.createQuery("from Categoria", Categoria.class).list();

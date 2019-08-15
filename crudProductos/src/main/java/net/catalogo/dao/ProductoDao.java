@@ -4,16 +4,18 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-
 import net.catalogo.entity.Productos;
 import net.catalogo.util.HibernateUtil;
+
+//import org.springframework.jdbc.core.BeanPropertyRowMapper;
 //import net.evaluado.entity.Producto;
 
 public class ProductoDao {
 
 	JdbcTemplate template;
+	
+	/*metodo insertar*/
 	public void insertarProducto(Productos pro) {
 		Transaction transaccion = null;
 		try(Session sesion = HibernateUtil.getSessionFactory().openSession()) {
@@ -29,29 +31,17 @@ public class ProductoDao {
 			e.printStackTrace();
 		}
 	}
+	/*Termina metodo insertar*/
 	
+	/*metodo consultarAll*/
 	public List<Productos> consultarProductos(){
 		try(Session sesion = HibernateUtil.getSessionFactory().openSession()){
 			return sesion.createQuery("from Productos", Productos.class).list();	
 		}
 	}
+	/*Teminar metodo consultarAll*/
 	
-	public void consultarById(int id) {
-		Transaction transaccion = null;
-		Session sesion = HibernateUtil.getSessionFactory().openSession();
-		Productos pro = (Productos) sesion.load(Productos.class, new Integer(id));
-		transaccion = sesion.beginTransaction();
-		if (null != pro) {
-			sesion.update(pro);
-			transaccion.commit();
-		}
-	}
-	
-	public Productos productoById(int idPro){    
-	    String sql="select * from productos where idProducto=?";    
-	    return template.queryForObject(sql, new Object[]{idPro},new BeanPropertyRowMapper<Productos>(Productos.class));    
-	} 
-	
+	/*Metodo Eliminar*/
 	public void eliminarProducto(int id) {
 		Transaction transaccion = null;
 //		Session sesion = this.sessionFactory.getCurrentSession();
@@ -63,6 +53,55 @@ public class ProductoDao {
 			transaccion.commit();
 		}
 	}
+	/*Termina metodo eliminar*/
+	
+	/*Metodo actualizar*/
+	public void updateProducto(int id) {
+		Transaction transaccion = null;
+//		Session sesion = this.sessionFactory.getCurrentSession();
+		Session sesion = HibernateUtil.getSessionFactory().openSession();
+		Productos pro = (Productos) sesion.load(Productos.class, new Integer(id));
+		transaccion = sesion.beginTransaction();
+		if (null != pro) {
+			sesion.update(pro);
+			transaccion.commit();
+		}
+	}
+	/*Terminar metodo Actulizar*/
+	
+	public void findByIdProducto(int id) {
+		Transaction transaccion = null;
+//		Session sesion = this.sessionFactory.getCurrentSession();
+		Session sesion = HibernateUtil.getSessionFactory().openSession();
+		Productos pro = (Productos) sesion.load(Productos.class, new Integer(id));
+		transaccion = sesion.beginTransaction();
+		if (null != pro) {
+			sesion.find(Productos.class, "idProducto");
+			transaccion.commit();
+		}
+	}
+	
+//	public void consultarById(int id) {
+//	Transaction transaccion = null;
+//	Session sesion = HibernateUtil.getSessionFactory().openSession();
+//	Productos pro = (Productos) sesion.load(Productos.class, new Integer(id));
+//	transaccion = sesion.beginTransaction();
+//	if (null != pro) {
+//		sesion.update(pro);
+//		transaccion.commit();
+//	}
+//}
+
+//public Productos productoById(int idPro){    
+//    String sql="select * from productos where idProducto=?";    
+//    return template.queryForObject(sql, new Object[]{idPro},new BeanPropertyRowMapper<Productos>(Productos.class));    
+//} 
+	
+	
+	
+	
+	
+	/*retazo de codigos...*/
 	
 //	/*public String
 //	String sql = "SELECT * FROM productos WHERE idProducto = :idProducto";

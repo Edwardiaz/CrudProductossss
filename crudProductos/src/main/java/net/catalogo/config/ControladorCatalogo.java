@@ -2,18 +2,22 @@ package net.catalogo.config;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import net.catalogo.dao.CategoriaDao;
 import net.catalogo.dao.ProductoDao;
 import net.catalogo.entity.Categoria;
 import net.catalogo.entity.Productos;
 
+//@RestController
+//@RequestMapping(value = "/api/connection")
 @Controller
 public class ControladorCatalogo {
 
@@ -23,7 +27,7 @@ public class ControladorCatalogo {
 		return "index";
 	}
 
-	@RequestMapping(value = "/producto", method = RequestMethod.POST)
+	@RequestMapping(value = "/producto",method = RequestMethod.POST)
 	public String insertarProductos(
 			@RequestParam(value = "producto") String producto,
 			@RequestParam(value = "precio") double precio, 
@@ -41,16 +45,7 @@ public class ControladorCatalogo {
 		return "index";
 	}
 
-	@RequestMapping("/listaC")
-	public String consultarCategoria(Model m) {
-		CategoriaDao catDao = new CategoriaDao();
-		// Categoria categoria = new Categoria();
-		List<Categoria> listaCate = catDao.consultarCategoria();
-		m.addAttribute("listaCat", listaCate);
-		return "mostrarCat";
-	}
-
-	@RequestMapping("/listaP")
+	@RequestMapping(value="/listaP", produces = "application/json")
 	public String consultarProducto(Model m) {
 		ProductoDao proDao = new ProductoDao();
 
@@ -58,6 +53,15 @@ public class ControladorCatalogo {
 		m.addAttribute("listaPro", listaPro);
 		return "mostrarPro";
 	}
+	
+//	@RequestMapping(value="/listaP", produces = {MediaType.APPLICATION_JSON_VALUE})
+//	public List<Productos> consultarProducto() {
+//		ProductoDao proDao = new ProductoDao();
+//
+//		List<Productos> listaPro = proDao.consultarProductos();
+////		m.addAttribute("listaPro", listaPro);
+//		return listaPro;
+//	}
 	
 	@RequestMapping(value = "/eliminarpro/{idProducto}", method = RequestMethod.GET)
 	public String eliminarProducto(@PathVariable("idProducto") int id, Model m) {
@@ -67,7 +71,31 @@ public class ControladorCatalogo {
 		m.addAttribute("listaPro", listaPro);
 		return "mostrarPro";
 	}
-
+	
+	@RequestMapping(value="update", method = RequestMethod.POST)
+	public String updateProducto(@PathVariable("idProducto") int id, Model m){
+		ProductoDao proDao = new ProductoDao();
+		proDao.updateProducto(id);
+		List<Productos> listaPro = proDao.consultarProductos();
+		m.addAttribute("listaPro", listaPro);
+		return "mostrarPro";
+	}
+	
+	@RequestMapping(value="/updatePro/{idProducto}", method = RequestMethod.GET)
+	public String findByIdProducto(@PathVariable("idProducto") int id, Model m){
+		ProductoDao proDao = new ProductoDao();
+		proDao.findByIdProducto(id);
+		return "updateProducto";
+	}
+	
+	@RequestMapping("/listaC")
+	public String consultarCategoria(Model m) {
+		CategoriaDao catDao = new CategoriaDao();
+		// Categoria categoria = new Categoria();
+		List<Categoria> listaCate = catDao.consultarCategoria();
+		m.addAttribute("listaCat", listaCate);
+		return "mostrarCat";
+	}
 	
 	/* actualiza productos */
 //	@RequestMapping(value = "/updatePro", method = RequestMethod.POST)
@@ -88,6 +116,4 @@ public class ControladorCatalogo {
 //        return "http://localhost:8090/crudProductos/listaP";
 //    }
  
-
-
 }

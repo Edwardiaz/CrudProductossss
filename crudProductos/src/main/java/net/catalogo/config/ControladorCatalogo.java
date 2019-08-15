@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,33 +58,36 @@ public class ControladorCatalogo {
 		m.addAttribute("listaPro", listaPro);
 		return "mostrarPro";
 	}
-
-	/* actualiza productos */
-	@RequestMapping(value = "/updatePro", method = RequestMethod.POST)
-	public String actualizarProd(@ModelAttribute("ver") Productos pro) {
-		ProductoDao proDao = new ProductoDao();
-		proDao.actualizarPro(pro);
-		return "localhost:8090/crudProductos/";
-	}
 	
-	 /* muestra los datos del objeto dentro del form por cada Id   
-     * el @PathVariable pone la URL en la variable.*/  
-	
-    @RequestMapping(value="/updatePro/{idProducto}")    
-    public String edit(@PathVariable int idProducto, Model m){
-    	ProductoDao proDao = new ProductoDao();
-        Productos productos = proDao.productoById(idProducto);    
-        m.addAttribute("command",productos);  
-        return "updateProducto";
-    }
-
-	/* eliminar productos */
-    
 	@RequestMapping(value = "/eliminarpro/{idProducto}", method = RequestMethod.GET)
-	public String eliminarProd(@PathVariable int idProducto) {
+	public String eliminarProducto(@PathVariable("idProducto") int id, Model m) {
 		ProductoDao proDao = new ProductoDao();
-		proDao.eliminarPro(idProducto);
-		return "redirect:/mostrarPro";
+		proDao.eliminarProducto(id);
+		List<Productos> listaPro = proDao.consultarProductos();
+		m.addAttribute("listaPro", listaPro);
+		return "mostrarPro";
 	}
+
+	
+	/* actualiza productos */
+//	@RequestMapping(value = "/updatePro", method = RequestMethod.POST)
+//	public String actualizarProd(@ModelAttribute("ver") Productos pro) {
+//		ProductoDao proDao = new ProductoDao();
+//		proDao.actualizarPro(pro);
+//		return "localhost:8090/crudProductos/";
+//	}
+//	
+//	 /* muestra los datos del objeto dentro del form por cada Id   
+//     * el @PathVariable pone la URL en la variable.*/  
+//	
+//    @RequestMapping(value="/updatePro/{idProducto}")    
+//    public String edit(@PathVariable int idProducto, Model m){
+//    	ProductoDao proDao = new ProductoDao();
+//        Productos productos = proDao.productoById(idProducto);    
+//        m.addAttribute("command",productos);  
+//        return "http://localhost:8090/crudProductos/listaP";
+//    }
+ 
+
 
 }

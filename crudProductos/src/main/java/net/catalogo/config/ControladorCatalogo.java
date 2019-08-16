@@ -2,13 +2,15 @@ package net.catalogo.config;
 
 import java.util.List;
 
+
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
+//import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.catalogo.dao.CategoriaDao;
@@ -16,9 +18,9 @@ import net.catalogo.dao.ProductoDao;
 import net.catalogo.entity.Categoria;
 import net.catalogo.entity.Productos;
 
-//@RestController
-//@RequestMapping(value = "/api/connection")
-@Controller
+@RestController
+@RequestMapping(value = "/api", produces = { MediaType.APPLICATION_JSON_VALUE})
+//@Controller
 public class ControladorCatalogo {
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
@@ -45,23 +47,23 @@ public class ControladorCatalogo {
 		return "index";
 	}
 
-	@RequestMapping(value="/listaP", produces = "application/json")
-	public String consultarProducto(Model m) {
-		ProductoDao proDao = new ProductoDao();
-
-		List<Productos> listaPro = proDao.consultarProductos();
-		m.addAttribute("listaPro", listaPro);
-		return "mostrarPro";
-	}
-	
-//	@RequestMapping(value="/listaP", produces = {MediaType.APPLICATION_JSON_VALUE})
-//	public List<Productos> consultarProducto() {
+//	@RequestMapping(value="/listaP", produces = "application/json")
+//	public String consultarProducto(Model m) {
 //		ProductoDao proDao = new ProductoDao();
 //
 //		List<Productos> listaPro = proDao.consultarProductos();
-////		m.addAttribute("listaPro", listaPro);
-//		return listaPro;
+//		m.addAttribute("listaPro", listaPro);
+//		return "mostrarPro";
 //	}
+	
+	@RequestMapping(value="/listaP", produces = "application/json")
+	public List<Productos> consultarProducto() {
+		ProductoDao proDao = new ProductoDao();
+
+		List<Productos> listaPro = proDao.consultarProductos();
+//		m.addAttribute("listaPro", listaPro);
+		return listaPro;
+	}
 	
 	@RequestMapping(value = "/eliminarpro/{idProducto}", method = RequestMethod.GET)
 	public String eliminarProducto(@PathVariable("idProducto") int id, Model m) {

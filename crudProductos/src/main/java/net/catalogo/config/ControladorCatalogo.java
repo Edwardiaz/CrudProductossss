@@ -3,24 +3,26 @@ package net.catalogo.config;
 import java.util.List;
 
 
-import org.springframework.http.MediaType;
-//import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.catalogo.dao.CategoriaDao;
 import net.catalogo.dao.ProductoDao;
 import net.catalogo.entity.Categoria;
 import net.catalogo.entity.Productos;
 
-@RestController
-@RequestMapping(value = "/api", produces = { MediaType.APPLICATION_JSON_VALUE})
-//@Controller
+//@RestController
+//@RequestMapping(value = "/api", produces = { MediaType.APPLICATION_JSON_VALUE})
+//import org.springframework.web.bind.annotation.RestController;
+//import org.springframework.stereotype.Controller;
+
+@Controller
 public class ControladorCatalogo {
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
@@ -52,12 +54,25 @@ public class ControladorCatalogo {
 //		ProductoDao proDao = new ProductoDao();
 //
 //		List<Productos> listaPro = proDao.consultarProductos();
+//		System.out.println("LA LISTA ES::::::-> "+listaPro);
 //		m.addAttribute("listaPro", listaPro);
 //		return "mostrarPro";
 //	}
 	
-	@RequestMapping(value="/listaP", produces = "application/json")
-	public List<Productos> consultarProducto() {
+	/* este metodo funciona */
+//	@RequestMapping("/listaP")
+//	public ModelAndView home() {
+////	    List<Customer> listCustomer = customerService.listAll();
+//		ProductoDao proDao = new ProductoDao();
+//		List<Productos> listaPro = proDao.consultarProductos();
+//	    ModelAndView mav = new ModelAndView("mostrarPro");
+//	    mav.addObject("listaPro", listaPro);
+//	    System.out.println("la lista es::::::: "+listaPro);
+//	    return mav;
+//	}
+	
+	@GetMapping(value="/listaP", produces = "application/json")
+	public @ResponseBody List<Productos> consultarProducto() {
 		ProductoDao proDao = new ProductoDao();
 
 		List<Productos> listaPro = proDao.consultarProductos();
@@ -93,7 +108,7 @@ public class ControladorCatalogo {
 	@RequestMapping("/listaC")
 	public String consultarCategoria(Model m) {
 		CategoriaDao catDao = new CategoriaDao();
-		// Categoria categoria = new Categoria();
+		
 		List<Categoria> listaCate = catDao.consultarCategoria();
 		m.addAttribute("listaCat", listaCate);
 		return "mostrarCat";
